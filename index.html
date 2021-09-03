@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>VosCity</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://kit.fontawesome.com/a2ee341a31.js" crossorigin="anonymous"></script>
+  <link href="/css/app.css" rel="stylesheet" />
+  <link rel="icon" href="https://img.icons8.com/color/48/000000/map-marker.png">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-172071403-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-172071403-1');
+</script>
+</head>
+<body>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0&appId=721270495332913&autoLogAppEvents=1" nonce="G7ucmfCq"></script>
+
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <div class="form-group text-center">
+
+      <h4 class="text-white mb-3 mt-2">VosCity <img src="https://img.icons8.com/color/30/000000/map-marker.png" /></h4>
+      <!-- Trigger/Open The Modal -->
+      <button style="display: none;" class="btn btn-info mb-3" id="myBtn">Donar <img src="https://img.icons8.com/color/20/000000/donate.png"/></button>
+
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div class="container">
+            <div class="row">
+              <h5 class="text-center text-white col-sm-12">Ayudame a que la paguina no tenga publicidad.</h5>
+            <div class="col-sm-4 mb-2">
+              <a target="_Blank" href="https://www.buymeacoffee.com/voscity?new=1" id="paypal"
+              class="btn btn-danger btn-sm">Comprame una cerveza <img src="https://img.icons8.com/color/48/000000/beer.png"/></a>
+            </div>
+            <div class="col-sm-4 mb-2">
+              <a target="_Blank" href="https://cash.app/$ale6s" id="paypal"
+              class="btn btn-success btn-sm">Cashme APP <img src="https://img.icons8.com/color/48/000000/get-cash.png"/></a>
+            </div>
+            <div class="col-sm-4 mb-2">
+              <a target="_Blank" href="https://paypal.me/VosCity?locale.x=en_US" id="paypal"
+                class="btn btn-primary btn-sm">Paypal <img
+                  src="https://img.icons8.com/color/48/000000/paypal.png" /></a>
+            </div>
+          </div>
+        </div>
+        </div>
+
+      </div>
+      <a href="login.html" class="btn btn-success mb-3">Promote your business<img
+          src="https://img.icons8.com/color/25/000000/discount--v1.png" /></a><br>
+
+
+      <input type="text" class="form-control border-dark mb-5 text-primary" id="search" placeholder="Buscar Negocio" />
+    </div>
+
+    <div class="container" id="data"></div>
+  </div>
+
+  <span id="menu" style="font-size: 30px; cursor: pointer;" onclick="openNav()">&#9776; Menu
+  </span>
+
+  <a class="float-right mt-2 mr-2" href="https://www.facebook.com/kiritox123" target="_BLANK"><img style="width: 35px;"
+      src="https://img.icons8.com/color/48/000000/facebook.png" /></i></a>
+  <a class="float-right mt-2" href="https://www.instagram.com/ale6sanchz/" target="_BLANK"><img style="width: 35px;"
+      src="https://img.icons8.com/color/48/000000/instagram-new.png" /></a>
+  <div class="fb-share-button float-right mt-2 mr-2" data-href="voscity.com"
+    data-layout="button_count" data-size="large"><a target="_blank"
+      href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse"
+      class="fb-xfbml-parse-ignore">Share</a></div>
+
+  <!--dipslay map-->
+  <div id="map"></div>
+
+
+  <!--show nav and search on nav-->
+  <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.6/firebase.js'></script>
+  <script src="/js/app.js"></script>
+  <script class="cssdeck" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+  <script>
+
+    function openNav() {
+      function mediaDevice(device) {
+        if (device.matches) { // If media query matches
+          document.getElementById("mySidenav").style.width = "100vw";
+        } else {
+          document.getElementById("mySidenav").style.width = "350px";
+        }
+      }
+      var device = window.matchMedia("(max-width: 768px)");
+      mediaDevice(device); // Call listener function at run time
+      device.addListener(mediaDevice); // Attach listener function on state changes
+    }
+
+    function closeNav() {
+      document.getElementById("mySidenav").style.width = "0";
+    }
+
+    $(function () {
+      $("#search").keyup(function () {
+        var val = $(this).val().toLowerCase();
+
+        $(".marker").hide();
+
+        $(".marker").each(function () {
+          var text = $(this).text().toLowerCase();
+
+          if (text.indexOf(val) != -1) {
+            $(this).show();
+          }
+        });
+      });
+    });
+          // Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+
+}
+  </script>
+</body>
+
+</html>

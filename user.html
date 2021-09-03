@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link href="/css/login.css" rel="stylesheet" />
+    <title>VosCity | User</title>
+    <link
+      rel="icon"
+      href="https://img.icons8.com/color/48/000000/map-marker.png"
+    />
+  </head>
+  <body class="bg-light">
+    <div id="fb-root"></div>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0&appId=721270495332913&autoLogAppEvents=1"
+      nonce="flFaJzIU"
+    ></script>
+    <div style="z-index: -99" id="map"></div>
+    <div id="user_div" class="loggedin-div">
+      <nav class="navbar navbar-light bg-dark">
+        <a class="text-white" href="index.html"
+          ><h2>
+            VosCity
+            <img
+              src="https://img.icons8.com/color/48/000000/map-marker.png"
+            /></h2
+        ></a>
+        <p id="user_para" class="text-white font-weight-bold">
+          You're currently logged in.
+        </p>
+        <button class="btn btn-danger btn-sm" onclick="logout()">Logout</button>
+      </nav>
+    </div>
+    <div class="container">
+      <h3 class="text-center text-danger mt-2" id="user_in"></h3>
+      <h6 class="text-center text-primary mt-2" id="user_coming"></h6>
+      <div class="row mt-5">
+        <div class="col-sm-3 form-group">
+          <span class="font-weight-bold" for="cars"
+            >Type of business: <span class="text-danger">*</span>
+            <select class="form-control" name="" id="typeOfB">
+              <option class="form-control" value="restaurante">
+                Restaurant
+              </option>
+              <option class="form-control" value="fonda">Food truck</option>
+              <option class="form-control" value="taller">Mechanic shop</option>
+              <option class="form-control" value="peluqueria">Barber</option>
+              <option class="form-control" value="llantera">Tire Shop</option>
+              <option class="form-control" value="carrocero">Cart Parts</option>
+            </select>
+          </span>
+        </div>
+        <div class="col-sm-3 form-group font-weight-bold">
+          <span
+            >Full Name: <span class="text-danger">*</span
+            ><input
+              style="text-transform: capitalize"
+              class="form-control"
+              id="personName"
+              required
+              type="text"
+          /></span>
+        </div>
+        <div class="col-sm-3 form-group font-weight-bold">
+          <span
+            >Business Name: <span class="text-danger">*</span>
+            <input
+              style="text-transform: capitalize"
+              class="form-control"
+              id="busName"
+              required
+              type="text"
+          /></span>
+        </div>
+        <div class="col-sm-3 form-group font-weight-bold">
+          <span
+            >Business Phone: <span class="text-danger">*</span
+            ><input
+              style="text-transform: capitalize"
+              class="form-control"
+              id="phone"
+              required
+              type="text"
+          /></span>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 form-group mt-3 bg-light">
+          <span
+            >It is recommended to put the link of your Facebook page, that way
+            other people will be able to see the recommendations that your
+            business has. Example:
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-5"></div>
+        <div class="col-sm-6 form-group">
+          <div
+            class="fb-like"
+            data-href="https://www.facebook.com/culichitownphoenix"
+            data-width=""
+            data-layout="button_count"
+            data-action="recommend"
+            data-size="small"
+            data-share="false"
+          ></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6 form-group font-weight-bold">
+          <span
+            >Link of your business Facebook page:
+            <input
+              class="form-control"
+              id="facebook"
+              placeholder="https://www.facebook.com/culichitownphoenix"
+              type="text"
+          /></span>
+        </div>
+      </div>
+      <hr />
+      <div class="row mt-5 mb-5">
+        <div class="col-sm-12 text-center bg-light">
+          <h4 class="font-weight-bold">Instructions</h4>
+          <p class="text-dark">
+            <span class="font-weight-bold"
+              >irst enter the desired address in the search on the map.</span
+            ><br />
+            Then zoom in on a higher level of detail and drag the marker exactly
+            where you want it. In the popup shows the coordinates. Copy the
+            latitude and longitude and paste it in the boxes down
+          </p>
+        </div>
+
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3 form-group mt-4">
+          <span class="font-weight-bold font-weight-bold"
+            >Latitude of your business here: <span class="text-danger">*</span>
+            <input
+              required
+              placeholder="33.4484367"
+              id="lat"
+              class="form-control"
+              type="text"
+          /></span>
+        </div>
+        <div class="col-sm-3 form-group mt-4">
+          <span class="font-weight-bold font-weight-bold"
+            >Length of your business here: <span class="text-danger">*</span>
+            <input
+              required
+              placeholder="-112.0741417"
+              id="lng"
+              class="form-control"
+              type="text"
+          /></span>
+        </div>
+        <div id="my-div" class="col-sm-12">
+          <iframe
+            src="https://www.mapcoordinates.net/es"
+            id="my-iframe"
+            scrolling="no"
+          ></iframe>
+        </div>
+      </div>
+
+      <!--**************************************************************horario******************************************************-->
+
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Monday open:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="monOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold" for="monto"
+          >monday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="monClose" class="form-control" disabled />
+        </div>
+        <div class="form-group row">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="monclosed"
+              placeholder="sss"
+              name="closed"
+              value="1"
+          /></label>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Tuesday open:</label
+        >
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="tueOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          >Tuesday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="tueClose" class="form-control" disabled />
+        </div>
+
+        <div class="row form-group">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="tueclosed"
+              name="closed"
+              value="2"
+          /></label>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Wednesday open:</label
+        >
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="wedOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          >Wednesday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="wedClose" class="form-control" disabled />
+        </div>
+        <div class="row form-group">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="wedclosed"
+              name="closed"
+              value="3"
+          /></label>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Thursday open:</label
+        >
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="thuOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          >Thursday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="thuClose" class="form-control" disabled />
+        </div>
+        <div class="row form-group">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="thuclosed"
+              name="closed"
+              value="4"
+          /></label>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Friday open:</label
+        >
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="friOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          >Friday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="friClose" class="form-control" disabled />
+        </div>
+        <div class="row form-group">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="friclosed"
+              name="closed"
+              value="5"
+          /></label>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Saturday open:</label
+        >
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="satOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          >Saturday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="satClose" class="form-control" disabled />
+        </div>
+        <div class="row form-group">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="satclosed"
+              name="closed"
+              value="6"
+          /></label>
+        </div>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="col-sm-12 col-md-1 col-lg-1"></div>
+        <label
+          class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          id="dayWeeks"
+          >Sunday open:</label
+        >
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="sunOpen" class="form-control" disabled />
+        </div>
+        <label class="col-sm-12 col-md-1 col-lg-2 font-weight-bold"
+          >Sunday close:
+        </label>
+        <div class="col-sm-12 col-md-3 col-lg-3 form-group">
+          <input type="time" id="sunClose" class="form-control" disabled />
+        </div>
+        <div class="row form-group mb-5">
+          <label class="ml-4 font-weight-bold text-danger" size="-1"
+            >Closed
+            <input
+              checked
+              class="form-check-input ml-2"
+              type="checkbox"
+              id="sunclosed"
+              name="closed"
+              value="0"
+          /></label>
+        </div>
+      </div>
+      <h5 id="error" class="text-danger text-center"></h5>
+      <h5 id="success" class="text-success text-center"></h5>
+      <button class="btn btn-primary btn-block btn-md" id="addbtn">
+        Send info
+      </button>
+      <button class="btn btn-warning btn-block btn-md" id="updatebtn">
+        Update
+      </button>
+      <!-- Trigger/Open The Modal -->
+      <button
+        style="display: none"
+        class="btn btn-success btn-block btn-md"
+        id="myBtn"
+      >
+        Donar <img src="https://img.icons8.com/color/20/000000/donate.png" />
+      </button>
+
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <div class="container">
+            <div class="row">
+              <h4 class="text-center col-sm-12">
+                Ayudame a que la paguina no tenga publicidad.
+              </h4>
+              <div class="col-sm-4">
+                <a
+                  target="_Blank"
+                  href="https://www.buymeacoffee.com/voscity?new=1"
+                  id="paypal"
+                  class="btn btn-danger btn-md"
+                  >Comprame una cerveza
+                  <img src="https://img.icons8.com/color/48/000000/beer.png"
+                /></a>
+              </div>
+              <div class="col-sm-4">
+                <a
+                  target="_Blank"
+                  href="https://cash.app/$ale6s"
+                  id="paypal"
+                  class="btn btn-success btn-md"
+                  >Cashme APP
+                  <img
+                    src="https://img.icons8.com/color/48/000000/get-cash.png"
+                /></a>
+              </div>
+              <div class="col-sm-4">
+                <a
+                  target="_Blank"
+                  href="https://paypal.me/VosCity?locale.x=en_US"
+                  id="paypal"
+                  class="btn btn-primary btn-md"
+                  >Paypal
+                  <img src="https://img.icons8.com/color/48/000000/paypal.png"
+                /></a>
+              </div>
+            </div>
+            <br />
+            <div class="font-weight-bold mt-2 mb-2">
+              Escribe tu correo electronico y el cambio que desea hacer. Espera
+              0hr a 24hrs para que tengas acceso
+            </div>
+            <a
+              class="btn btn-info btn-md btn-block"
+              href="mailto:voscity.az@gmail.com?subject=Requesting update"
+              >Hacer cambios</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="mb-5"></div>
+      <br />
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://cdn.firebase.com/js/client/1.0.6/firebase.js"
+    ></script>
+    <script
+      class="cssdeck"
+      src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"
+    ></script>
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <script>
+      var config = {
+        //Firebase info goes here
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(config);
+      // Get the modal
+      var modal = document.getElementById("myModal");
+
+      // Get the button that opens the modal
+      var btn = document.getElementById("myBtn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      // When the user clicks the button, open the modal
+      btn.onclick = function () {
+        modal.style.display = "block";
+      };
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function () {
+        modal.style.display = "none";
+      };
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function (event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    </script>
+    <script src="/js/login.js"></script>
+    <script src="/js/user.js"></script>
+    <script
+      class="cssdeck"
+      src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.8.0/jquery.min.js"
+    ></script>
+  </body>
+</html>
